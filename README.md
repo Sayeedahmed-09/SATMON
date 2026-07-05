@@ -73,7 +73,7 @@ Auto-generated alert log. Every time the classifier returns a warning or critica
 ---
 
 ### Live Simulation
-![Live Simulation](docs/screenshots/simulation.png)
+![Live Simulation]([docs/screenshots/simulation.png](https://github.com/Sayeedahmed-09/SATMON/blob/20d7ff1965e443aafce05aa57aed171570d22e72/docs/screenshots/Live%20Simulation(6).png))
 
 Starts a continuous simulation loop. Each tick nudges the current telemetry slightly (small random walk) and re-runs XGBoost + SHAP. The live feed shows each prediction as it arrives. Speed is adjustable from 0.5s to 2s per tick. The dashboard telemetry chart and subsystem rings update automatically.
 
