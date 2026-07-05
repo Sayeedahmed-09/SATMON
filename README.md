@@ -103,7 +103,7 @@ SHAP (SHapley Additive Explanations) via TreeExplainer. For each of the top 10 f
 ---
 
 ### LIME Analysis
-![LIME](docs/screenshots/lime.png)
+![LIME]()
 
 LIME (Local Interpretable Model-Agnostic Explanations). Works differently from SHAP — it perturbs the input 300 times, fits a local linear model around this specific prediction, and extracts which features mattered most locally. Available on manual scans only (not simulation ticks, because it's slower). Comparing SHAP and LIME outputs gives a second opinion on which parameters were most influential.
 
