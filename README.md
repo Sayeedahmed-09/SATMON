@@ -124,7 +124,7 @@ Tracks Battery SOC, CPU Temperature, and Bus Voltage over recent scans. Fits a l
 ---
 
 ### Recommendations
-![Recommendations](docs/screenshots/recommendations.png)
+![Recommendations](https://github.com/Sayeedahmed-09/SATMON/blob/deb99913844a184e12fcfa34dca0993a31440fa6/docs/screenshots/Recommandations(14).png)
 
 A list of specific operator actions based on the detected fault class. Not generic — each fault class has its own set of 3–4 actionable recommendations. For example, a Communication Issue suggests re-pointing the antenna, switching to backup frequency, and logging the outage duration.
 
