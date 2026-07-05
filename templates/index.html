@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SATMON — CubeSat Digital Twin</title>
+  <!-- SVG favicon — satellite icon, no external file needed -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Crect x='12' y='10' width='8' height='12' rx='1' fill='white' opacity='0.95'/%3E%3Crect x='3' y='14' width='9' height='4' rx='1' fill='white' opacity='0.8'/%3E%3Crect x='20' y='14' width='9' height='4' rx='1' fill='white' opacity='0.8'/%3E%3Cline x1='16' y1='10' x2='16' y2='6' stroke='white' stroke-width='1.5' opacity='0.9'/%3E%3Ccircle cx='16' cy='5' r='1.5' fill='%2393c5fd'/%3E%3Cpath d='M18 5.5 Q21 3 24 5.5' stroke='%2393c5fd' stroke-width='1' fill='none' opacity='0.8'/%3E%3C/svg%3E"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M5.5 2L2 5.5l4.3 4.3-1.4 1.4L2 8.3 0 10.3l3.7 3.7 1.1-1.1 2.1 2.1L5.5 16H8l8-8V5.5L13.7 4l-1.4 1.4-2.1-2.1 1.1-1.1L7.6 0l-2 2 2.9 2.9-1.4 1.4L5.5 2zm9 9L12 13.5l2.5 2.5-1.4 1.4L10.6 14 8 16.5V19l8-8h-1.5zM16 16l-1.5 1.5 3.5 3.5 2-2-4-3zM0 16l4 4 2-2-3.5-3.5L0 16z"/></svg>
+      </div>
+      <div>
+        <div class="sb-name">SATMON</div>
+        <div class="sb-tagline">CubeSat Digital Twin</div>
+      </div>
+    </div>
+
+    <div class="sb-status">
+      <div class="sb-status-dot"></div>
+      <span id="clk">--:--:-- UTC</span>
+    </div>
+
+    <div class="nav-section">Overview</div>
+    <button class="nav-btn active" data-page="dashboard"  onclick="go('dashboard')"> <span class="nav-ic">◈</span> Dashboard</button>
+    <button class="nav-btn"        data-page="subsystems" onclick="go('subsystems')"><span class="nav-ic">⬡</span> Subsystem Health</button>
+    <button class="nav-btn"        data-page="analytics"  onclick="go('analytics')"> <span class="nav-ic">↗</span> Analytics</button>
+    <button class="nav-btn"        data-page="alerts"     onclick="go('alerts')">    <span class="nav-ic">◉</span> Alerts <span class="ndot" id="nd-alerts"></span></button>
+
+    <div class="nav-section">Input</div>
+    <button class="nav-btn" data-page="manual"    onclick="go('manual')">   <span class="nav-ic">⌨</span> Manual Input</button>
+    <button class="nav-btn" data-page="simulate"  onclick="go('simulate')"> <span class="nav-ic">▷</span> Live Simulation</button>
+    <button class="nav-btn" data-page="quickload" onclick="go('quickload')"><span class="nav-ic">⚡</span> Quick Load</button>
+    <button class="nav-btn" data-page="external"  onclick="go('external')"> <span class="nav-ic">⇄</span> External Source</button>
+
+    <div class="nav-section">AI Results</div>
+    <button class="nav-btn" data-page="result"    onclick="go('result')">   <span class="nav-ic">◎</span> Classification   <span class="ndot" id="nd-result"></span></button>
+    <button class="nav-btn" data-page="xai"       onclick="go('xai')">      <span class="nav-ic">⬡</span> SHAP              <span class="ndot" id="nd-xai"></span></button>
+    <button class="nav-btn" data-page="lime"      onclick="go('lime')">      <span class="nav-ic">◇</span> LIME              <span class="ndot" id="nd-lime"></span></button>
+    <button class="nav-btn" data-page="compare"   onclick="go('compare')">  <span class="nav-ic">⇌</span> Model Comparison  <span class="ndot" id="nd-compare"></span></button>
+    <button class="nav-btn" data-page="rul"       onclick="go('rul')">       <span class="nav-ic">⧗</span> Remaining Life    <span class="ndot" id="nd-rul"></span></button>
+    <button class="nav-btn" data-page="recommend" onclick="go('recommend')"> <span class="nav-ic">▸</span> Recommendations   <span class="ndot" id="nd-recommend"></span></button>
+
+    <div class="nav-section">Records</div>
+    <button class="nav-btn" data-page="timeline" onclick="go('timeline')"> <span class="nav-ic">⋮</span> Mission Timeline</button>
+    <button class="nav-btn" data-page="history"  onclick="go('history')">  <span class="nav-ic">≡</span> Prediction History</button>
+    <button class="nav-btn" data-page="export"   onclick="go('export')">   <span class="nav-ic">↓</span> Export</button>
+
+    <div class="sb-footer">
+      SATMON v2.0<br>
+      XGBoost · SHAP · LIME · RUL<br>
+      7 fault classes · 16 features
+    </div>
+  </nav>
+
+  <!-- ═══ CONTENT ═══ -->
+  <main class="content">
+    <!-- page-hdr is hidden on dashboard (banner replaces it), shown on all others -->
+    <div class="page-hdr" id="global-page-hdr">
+      <div class="page-hdr-eyebrow" id="pg-eyebrow">Overview</div>
+      <h1 id="pg-title">Dashboard</h1>
+      <p id="pg-desc">Live virtual replica of satellite state, fault prediction and explainability.</p>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <section class="page active" id="page-dashboard">
+
+      <!-- Hero Banner — replaces page-hdr on dashboard -->
+      <div class="dash-banner">
+        <div class="dash-banner-graphic">
+          <svg viewBox="0 0 500 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="200" y="130" width="100" height="80" rx="6" fill="white" opacity="0.9"/>
+            <rect x="60" y="150" width="130" height="40" rx="4" fill="white" opacity="0.7"/>
+            <line x1="60" y1="160" x2="190" y2="160" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <line x1="60" y1="170" x2="190" y2="170" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <line x1="60" y1="180" x2="190" y2="180" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <rect x="310" y="150" width="130" height="40" rx="4" fill="white" opacity="0.7"/>
+            <line x1="310" y1="160" x2="440" y2="160" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <line x1="310" y1="170" x2="440" y2="170" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <line x1="310" y1="180" x2="440" y2="180" stroke="#1e40af" stroke-width="1.5" opacity="0.5"/>
+            <line x1="250" y1="130" x2="250" y2="80" stroke="white" stroke-width="2" opacity="0.8"/>
+            <circle cx="250" cy="75" r="6" fill="white" opacity="0.8"/>
+            <path d="M270 70 Q290 55 310 70" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <path d="M280 60 Q310 38 340 60" stroke="white" stroke-width="1.5" fill="none" opacity="0.3"/>
+            <rect x="225" y="210" width="50" height="16" rx="3" fill="white" opacity="0.6"/>
+            <rect x="215" y="148" width="30" height="20" rx="2" fill="#1e40af" opacity="0.4"/>
+            <rect x="255" y="148" width="30" height="20" rx="2" fill="#1e40af" opacity="0.4"/>
+            <ellipse cx="250" cy="170" rx="220" ry="150" stroke="white" stroke-width="1" fill="none" opacity="0.08" stroke-dasharray="6 4"/>
+          </svg>
+        </div>
+        <div class="dash-banner-content">
+          <div class="dash-banner-label">AI-Powered · CubeSat Digital Twin</div>
+          <div class="dash-banner-title">Satellite <span>Fault</span> Intelligence</div>
+          <div class="dash-banner-desc">
+            Real-time telemetry monitoring, predictive fault detection,
+            and explainable AI — powered by XGBoost, SHAP and LIME.
+          </div>
+          <div class="dash-banner-pills">
+            <span class="dash-pill">XGBoost</span>
+            <span class="dash-pill">SHAP</span>
+            <span class="dash-pill">LIME</span>
+            <span class="dash-pill">7 Fault Classes</span>
+            <span class="dash-pill">16 Parameters</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card info">
+          <div class="kpi-label">Mission State</div>
+          <div class="kpi-value kpi-state-val" id="kpi-state">—</div>
+          <div class="kpi-sub" id="kpi-sev">No scan yet</div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-label">Confidence</div>
+          <div class="kpi-value" id="kpi-conf">—</div>
+          <div class="kpi-sub">XGBoost output</div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-label">Subsystem Alerts</div>
+          <div class="kpi-value" id="kpi-alerts">0 / 6</div>
+          <div class="kpi-sub">Out of nominal range</div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-label">Session Scans</div>
+          <div class="kpi-value" id="kpi-scans">0</div>
+          <div class="kpi-sub">Total predictions</div>
+        </div>
+      </div>
+
+      <div class="section-label mb-4">Modules</div>
+      <div class="mod-grid mb-6">
+        <div class="mod-card" onclick="go('simulate')">  <div class="mod-icon">🛰</div><div class="mod-name">Satellite Simulator</div><div class="mod-desc">Drifting synthetic telemetry emulating live orbital behavior.</div></div>
+        <div class="mod-card" onclick="go('subsystems')"><div class="mod-icon">⬡</div><div class="mod-name">State Monitor</div><div class="mod-desc">Per-subsystem health: power, thermal, attitude, comms.</div></div>
+        <div class="mod-card" onclick="go('manual')">    <div class="mod-icon">◎</div><div class="mod-name">Fault Detector</div><div class="mod-desc">XGBoost classifier — 7 fault classes, 16 parameters.</div></div>
+        <div class="mod-card" onclick="go('xai')">       <div class="mod-icon">⬡</div><div class="mod-name">SHAP Analysis</div><div class="mod-desc">Feature contribution values via TreeExplainer.</div></div>
+        <div class="mod-card" onclick="go('lime')">      <div class="mod-icon">◇</div><div class="mod-name">LIME Analysis</div><div class="mod-desc">Local interpretable model-agnostic explanations.</div></div>
+        <div class="mod-card" onclick="go('compare')">   <div class="mod-icon">⇌</div><div class="mod-name">Model Comparison</div><div class="mod-desc">XGBoost vs RandomForest on the same input.</div></div>
+        <div class="mod-card" onclick="go('rul')">       <div class="mod-icon">⧗</div><div class="mod-name">Remaining Useful Life</div><div class="mod-desc">Degradation projection via linear regression.</div></div>
+        <div class="mod-card" onclick="go('recommend')"> <div class="mod-icon">▸</div><div class="mod-name">Recommendations</div><div class="mod-desc">Operator actions per fault class.</div></div>
+        <div class="mod-card" onclick="go('analytics')"> <div class="mod-icon">↗</div><div class="mod-name">Analytics</div><div class="mod-desc">Confidence trend, fault distribution, severity breakdown.</div></div>
+      </div>
+
+      <div class="section-label mb-4">
+        Live Telemetry
+        <span id="live-pill" style="display:none" class="live-pill"><span class="live-dot"></span>LIVE</span>
+      </div>
+      <div class="card mb-6">
+        <div class="card-body">
+          <div class="chart-toolbar">
+            <div class="chart-series-btns" id="seriesBtns"></div>
+            <div class="chart-btns">
+              <button class="btn btn-ghost" id="chartPauseBtn" onclick="toggleChartPause()" style="padding:4px 10px;font-size:12px">⏸ Pause</button>
+              <button class="btn btn-ghost" onclick="exportChartCSV()" style="padding:4px 10px;font-size:12px">↓ CSV</button>
+              <button class="btn btn-ghost" onclick="clearChart()" style="padding:4px 10px;font-size:12px">✕ Clear</button>
+            </div>
+          </div>
+          <canvas id="liveChart" style="width:100%;display:none"></canvas>
+          <div id="liveChartEmpty" class="empty-state">Start simulation or run a scan to populate the live chart.</div>
+        </div>
+      </div>
+
+      <div class="section-label mb-4">Last Scan — Telemetry Snapshot</div>
+      <div class="card"><div class="card-body" id="dash-telemetry"><div class="empty-state">No scan yet.</div></div></div>
+    </section>
+
+    <!-- ── SUBSYSTEM HEALTH ── -->
+    <section class="page" id="page-subsystems">
+      <p class="hint">Reflects the most recently submitted telemetry. Run a scan first to populate.</p>
+      <div class="sub-grid" id="subGrid"><div class="empty-state">No telemetry submitted yet.</div></div>
+    </section>
+
+    <!-- ── ANALYTICS ── -->
+    <section class="page" id="page-analytics">
+      <div class="kpi-grid mb-6">
+        <div class="kpi-card info"><div class="kpi-label">Total Scans</div><div class="kpi-value" id="ana-total">0</div></div>
+        <div class="kpi-card info"><div class="kpi-label">Avg Confidence</div><div class="kpi-value" id="ana-conf">—</div></div>
+        <div class="kpi-card crit"><div class="kpi-label">Critical Events</div><div class="kpi-value" id="ana-crit">0</div></div>
+        <div class="kpi-card ok">  <div class="kpi-label">Nominal Rate</div><div class="kpi-value" id="ana-nom">—</div></div>
+      </div>
+
+      <div class="section-label mb-4">Confidence Trend — Last 50 Scans</div>
+      <div class="card mb-6"><div class="card-body" style="padding:16px 18px">
+        <canvas id="trendChart" height="110"></canvas>
+        <div id="trendEmpty" class="empty-state" style="display:none">Run scans to populate chart.</div>
+      </div></div>
+
+      <div class="section-label mb-4">Fault Distribution</div>
+      <div class="card mb-6"><div class="card-body" id="ana-dist"><div class="empty-state">No data yet.</div></div></div>
+
+      <div class="section-label mb-4">Severity Breakdown</div>
+      <div class="card"><div class="card-body" id="ana-sev"><div class="empty-state">No data yet.</div></div></div>
+    </section>
+
+    <!-- ── ALERTS ── -->
+    <section class="page" id="page-alerts">
+      <div class="section-label">
+        Dynamic Alerts
+        <button class="btn btn-danger-ghost" onclick="clearAlerts()" style="font-size:12px;padding:3px 10px">Clear all</button>
+      </div>
+      <p class="hint">Auto-generated when a warning or critical fault is detected. Consecutive duplicates are suppressed.</p>
+      <div class="card"><div id="alerts-body"><div class="empty-state">No alerts this session.</div></div></div>
+    </section>
+
+    <!-- ── MANUAL INPUT ── -->
+    <section class="page" id="page-manual">
+      <div class="toggle-group">
+        <span class="toggle-label">Model:</span>
+        <button class="toggle-btn active" id="btn-xgb" onclick="setModel('xgb')">XGBoost (Primary)</button>
+        <button class="toggle-btn"        id="btn-rf"  onclick="setModel('rf')">RandomForest (Fallback)</button>
+        <label class="lime-check"><input type="checkbox" id="limeCheck" checked/> Include LIME</label>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="input-section"><div class="input-section-title">⚡ Power &amp; Electrical</div><div class="input-grid" id="g-power"></div></div>
+          <div class="input-section"><div class="input-section-title">🔋 Battery</div><div class="input-grid" id="g-battery"></div></div>
+          <div class="input-section"><div class="input-section-title">☀️ Solar Array</div><div class="input-grid" id="g-solar"></div></div>
+          <div class="input-section"><div class="input-section-title">🌀 Attitude Control</div><div class="input-grid" id="g-attitude"></div></div>
+          <div class="input-section"><div class="input-section-title">📡 Computing &amp; Comms</div><div class="input-grid" id="g-obc"></div></div>
+          <div class="input-section"><div class="input-section-title">🛰️ Orbital Parameters</div><div class="input-grid" id="g-orbital"></div></div>
+          <button class="btn btn-primary btn-full" id="scanBtn" onclick="runScan()">
+            <span id="scanAnim" style="display:inline-block;width:0;overflow:hidden">▷ </span>
+            Run Anomaly Scan
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LIVE SIMULATION ── -->
+    <section class="page" id="page-simulate">
+      <div class="card mb-6">
+        <div class="card-header"><div class="card-title">Satellite Simulator</div></div>
+        <div class="card-body">
+          <p class="hint">Each tick nudges telemetry slightly and re-runs XGBoost + SHAP, emulating continuous orbital monitoring without a physical telemetry feed.</p>
+          <div class="sim-controls">
+            <button class="btn btn-primary" id="simBtn" onclick="toggleSim()">▷ Start Simulation</button>
+            <select class="form-select" id="simSpd">
+              <option value="2000">Tick every 2s</option>
+              <option value="1000">Tick every 1s</option>
+              <option value="500">Tick every 0.5s</option>
+            </select>
+            <span class="sim-ticker">Ticks: <strong id="simTicks">0</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="section-label mb-4">Live Feed</div>
+      <div class="card"><div class="card-body" id="simFeed"><div class="empty-state">Simulation not running.</div></div></div>
+    </section>
+
+    <!-- ── QUICK LOAD ── -->
+    <section class="page" id="page-quickload">
+      <div class="section-label mb-4">Preset Scenarios</div>
+      <p class="hint">"Load &amp; Scan" fills the form and runs XGBoost + SHAP + LIME immediately.</p>
+      <div class="preset-grid mb-6" id="pGrid"><div class="empty-state">Loading…</div></div>
+
+      <div class="section-label mb-4">Randomize</div>
+      <div class="card"><div class="card-body">
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="randFields('confident')">🎯 High Confidence</button>
+          <button class="btn btn-secondary" onclick="randFields('borderline')">⚖️ Borderline</button>
+          <button class="btn btn-secondary" onclick="randFields('chaotic')">🌪 Chaotic / Low</button>
+          <button class="btn btn-ghost"     onclick="resetFields()">↺ Reset Defaults</button>
+        </div>
+        <p class="hint mt-6"><strong>High Confidence</strong> keeps values inside nominal range. <strong>Borderline</strong> pushes toward range edges. <strong>Chaotic</strong> forces multiple parameters outside nominal simultaneously.</p>
+      </div></div>
+    </section>
+
+    <!-- ── EXTERNAL ── -->
+    <section class="page" id="page-external">
+      <div class="card">
+        <div class="no-conn-state">
+          <div class="no-conn-icon">⇄</div>
+          <div class="no-conn-title">No External Source Connected</div>
+          <div class="no-conn-sub">The system is not linked to any satellite telemetry stream. Connect via Serial, TCP Socket, or a Live Data Feed to enable this mode.</div>
+          <div class="no-conn-badges">
+            <span class="status-chip">Serial — Offline</span>
+            <span class="status-chip">TCP Socket — Offline</span>
+            <span class="status-chip">Data Feed — Offline</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLASSIFICATION ── -->
+    <section class="page" id="page-result">
+      <div id="model-tag-wrap" style="margin-bottom:16px;display:none">
+        <span id="model-tag" class="model-tag xgb"></span>
+      </div>
+      <div class="card" id="result-panel">
+        <div class="empty-state">No scan yet.</div>
+      </div>
+    </section>
+
+    <!-- ── SHAP ── -->
+    <section class="page" id="page-xai">
+      <p class="hint">SHAP (SHapley Additive Explanations) via TreeExplainer measures each feature's exact contribution to this prediction. Green bars pushed the model <em>toward</em> this class; red bars pushed <em>against</em> it.</p>
+      <div class="card mb-6">
+        <div class="card-header"><div class="card-title">Feature Contributions</div></div>
+        <div class="card-body" id="xai-panel"><div class="empty-state">No scan yet.</div></div>
+      </div>
+      <div class="section-label mb-4">Prediction Narrative</div>
+      <div id="explain-panel"></div>
+    </section>
+
+    <!-- ── LIME ── -->
+    <section class="page" id="page-lime">
+      <p class="hint">LIME (Local Interpretable Model-Agnostic Explanations) perturbs the input and fits a local linear model to explain this specific prediction. Only available on manual scans.</p>
+      <div class="card">
+        <div class="card-header"><div class="card-title">LIME Feature Weights</div></div>
+        <div class="card-body" id="lime-panel"><div class="empty-state">No scan yet. LIME runs on manual scans only.</div></div>
+      </div>
+    </section>
+
+    <!-- ── MODEL COMPARISON ── -->
+    <section class="page" id="page-compare">
+      <p class="hint">Runs both XGBoost and RandomForest on the last submitted telemetry and shows predictions, probabilities, and top SHAP features side by side.</p>
+      <button class="btn btn-primary mb-6" onclick="runComparison()">⇌ Run Comparison</button>
+      <div id="compare-panel"><div class="empty-state">Click "Run Comparison" after submitting at least one scan.</div></div>
+    </section>
+
+    <!-- ── RUL ── -->
+    <section class="page" id="page-rul">
+      <p class="hint">Linear regression on recent telemetry history projects when Battery SOC, CPU Temperature, and Bus Voltage will cross their critical thresholds. Requires at least 3 data points.</p>
+      <div id="rul-panel"><div class="empty-state">Run a few scans or start simulation to generate RUL estimates.</div></div>
+    </section>
+
+    <!-- ── RECOMMENDATIONS ── -->
+    <section class="page" id="page-recommend">
+      <p class="hint">Suggested operator actions based on the most recently detected fault class.</p>
+      <div class="card" id="rec-panel"><div class="empty-state">No scan yet.</div></div>
+    </section>
+
+    <!-- ── MISSION TIMELINE ── -->
+    <section class="page" id="page-timeline">
+      <div class="section-label">
+        Mission Timeline
+        <button class="btn btn-danger-ghost" onclick="clearHist()" style="font-size:12px;padding:3px 10px">Clear</button>
+      </div>
+      <div id="timeline-body"><div class="empty-state">No scans yet.</div></div>
+    </section>
+
+    <!-- ── HISTORY ── -->
+    <section class="page" id="page-history">
+      <div class="section-label">
+        Prediction History
+        <button class="btn btn-danger-ghost" onclick="clearHist()" style="font-size:12px;padding:3px 10px">Clear</button>
+      </div>
+      <div class="card"><div id="hist-body"><div class="empty-state">No scans yet.</div></div></div>
+    </section>
+
+    <!-- ── EXPORT ── -->
+    <section class="page" id="page-export">
+      <div class="card"><div class="card-body">
+        <div class="btn-group mb-4">
+          <button class="btn btn-primary"    onclick="exportJSON()">↓ Export JSON (SHAP + LIME)</button>
+          <button class="btn btn-secondary"  onclick="exportChartCSV()">↓ Telemetry CSV</button>
+          <button class="btn btn-secondary"  onclick="copySummary()">⎘ Copy Summary</button>
+          <button class="btn btn-ghost"      onclick="window.print()">⎙ Print / PDF</button>
+        </div>
+        <p class="hint" id="export-status"></p>
+      </div></div>
+    </section>
+
+    <div id="toast-container"></div>
+    <footer>SATMON v2.0 · CubeSat Digital Twin · XGBoost + SHAP + LIME + RUL · Health Monitoring & Predictive Fault Management</footer>
+  </main>
+</div>
+
+<script>const FEATURES = {{ features | tojson }};</script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
