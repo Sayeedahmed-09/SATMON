@@ -66,7 +66,7 @@ Auto-generated alert log. Every time the classifier returns a warning or critica
 ---
 
 ### Manual Input
-![Manual Input](docs/screenshots/manual_input.png)
+![Manual Input]([docs/screenshots/manual_input.png](https://github.com/Sayeedahmed-09/SATMON/blob/4bf3cf3db41dd1b5b1cbdc41786729abe1e1e223/docs/screenshots/Manual%20Input(5).png))
 
 16 telemetry fields grouped by subsystem. Each field shows its nominal range below the input. Fields highlight amber if the entered value is outside the nominal range. You can choose between XGBoost (primary) and RandomForest (fallback) models, and toggle whether to include LIME analysis with the scan.
 
