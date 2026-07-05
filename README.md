@@ -38,7 +38,7 @@ There's also a live simulator that continuously nudges the telemetry and re-runs
 > Recommended: run the app, load a preset from Quick Load, scan, then screenshot each section.
 
 ### Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](https://github.com/Sayeedahmed-09/SATMON/blob/2e651eaf5af4939bc0cd8a93553b424ccfe12309/docs/screenshots/dashboard(1).png)
 
 The main overview page. Shows 4 live KPIs (mission state, confidence, subsystem alerts, session scans), a satellite banner, 9 module cards, a live telemetry chart that updates during simulation, and a snapshot of the last scan's raw telemetry values.
 
