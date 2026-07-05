@@ -80,7 +80,7 @@ Starts a continuous simulation loop. Each tick nudges the current telemetry slig
 ---
 
 ### Quick Load
-![Quick Load](docs/screenshots/quickload.png)
+![Quick Load]([docs/screenshots/quickload.png](https://github.com/Sayeedahmed-09/SATMON/blob/d5e95256d6992dce893138a1b941224a733ab7c7/docs/screenshots/Quick%20Load(7).png))
 
 Six preset scenarios for fast testing — Normal Operation, Power Anomaly, Thermal Anomaly, Critical Fault, Communication Issue, and a Borderline/Mixed Signal scenario. Each card shows the expected severity and confidence level. "Load Only" fills the form so you can inspect and edit values first. "Load & Scan" runs immediately.
 
