@@ -145,7 +145,7 @@ Full table of all scans this session — timestamp, prediction, confidence, and 
 ---
 
 ### Export
-![Export](docs/screenshots/export.png)
+![Export](https://github.com/Sayeedahmed-09/SATMON/blob/0c3768541d63f6e838a62e1d3f843eb9e956181c/docs/screenshots/Export(17).png)
 
 Four export options:
 - **Export JSON** — full prediction payload including SHAP values, LIME weights, subsystem health, recommendations, and raw telemetry
