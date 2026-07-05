@@ -45,7 +45,7 @@ The main overview page. Shows 4 live KPIs (mission state, confidence, subsystem 
 ---
 
 ### Subsystem Health Monitor
-![Subsystem Health](docs/screenshots/subsystems.png)
+![Subsystem Health](https://github.com/Sayeedahmed-09/SATMON/blob/c595039d38f1c612f64fd52b232f4340e501e34e/docs/screenshots/SubSystem%20Health(2).png)
 
 Breaks the satellite into 6 subsystems — Power & Electrical, Thermal, Attitude Control, On-Board Computing, Communications, and Orbital. Each is shown as a circular health ring with a percentage score. If any parameter inside a subsystem is outside its nominal range, the ring turns red and lists the specific offending parameters.
 
