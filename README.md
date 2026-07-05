@@ -59,7 +59,7 @@ Session-level statistics: total scans, average confidence, critical event count,
 ---
 
 ### Alerts
-![Alerts](docs/screenshots/alerts.png)
+![Alerts](https://github.com/Sayeedahmed-09/SATMON/blob/b2ed91bd8ff0a2f3b7a0dd39c9786d82546595f2/docs/screenshots/Alerts(4).png)
 
 Auto-generated alert log. Every time the classifier returns a warning or critical result, an entry is added here with a timestamp and confidence score. Consecutive identical alerts are deduplicated. Toast notifications also appear in the top-right corner of the screen.
 
