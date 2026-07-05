@@ -52,7 +52,7 @@ Breaks the satellite into 6 subsystems — Power & Electrical, Thermal, Attitude
 ---
 
 ### Analytics
-![Analytics](docs/screenshots/analytics.png)
+![Analytics](https://github.com/Sayeedahmed-09/SATMON/blob/a39d5cad9220b832dd11d3962116227aad06fd51/docs/screenshots/Analytics(3).png)
 
 Session-level statistics: total scans, average confidence, critical event count, and nominal rate. Includes a canvas-drawn confidence trend chart (last 50 scans, coloured dots per severity), a fault distribution bar chart, and a severity breakdown.
 
