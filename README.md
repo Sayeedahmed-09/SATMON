@@ -138,7 +138,7 @@ Visual event log of all predictions this session. Each prediction appears as a c
 ---
 
 ### Prediction History
-![History](docs/screenshots/history.png)
+![History](https://github.com/Sayeedahmed-09/SATMON/blob/af130d8b1ab811c32ce2fe73aa158a2de97347f2/docs/screenshots/Prediction%20History(16).png)
 
 Full table of all scans this session — timestamp, prediction, confidence, and which model was used. Sortable by most recent. Clearable.
 
