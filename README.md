@@ -110,7 +110,7 @@ LIME (Local Interpretable Model-Agnostic Explanations). Works differently from S
 ---
 
 ### Model Comparison
-![Model Comparison](docs/screenshots/comparison.png)
+![Model Comparison](https://github.com/Sayeedahmed-09/SATMON/blob/01c074ade65ee0186abb209ff577e5a3793f2fcf/docs/screenshots/Model%20Comparision(12).png)
 
 Runs both XGBoost and RandomForest on the exact same telemetry and shows the results side by side — predictions, confidence, probability bars, and top SHAP features for each model. A verdict at the bottom shows whether the models agree or disagree, which is useful for assessing prediction reliability.
 
