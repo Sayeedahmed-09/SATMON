@@ -131,7 +131,7 @@ A list of specific operator actions based on the detected fault class. Not gener
 ---
 
 ### Mission Timeline
-![Timeline](docs/screenshots/timeline.png)
+![Timeline](https://github.com/Sayeedahmed-09/SATMON/blob/0333def1f7610586109c3ca2de557e9e649ba40e/docs/screenshots/Mission%20Timeline(15).png)
 
 Visual event log of all predictions this session. Each prediction appears as a coloured dot on a vertical timeline with the fault class, confidence, and timestamp. Colour-coded by severity — green for nominal, amber for warning, red for critical.
 
