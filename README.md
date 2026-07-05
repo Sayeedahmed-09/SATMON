@@ -89,7 +89,7 @@ Also includes three randomize modes: High Confidence (values inside nominal rang
 ---
 
 ### Classification Result
-![Classification Result](docs/screenshots/result.png)
+![Classification Result]([docs/screenshots/result.png](https://github.com/Sayeedahmed-09/SATMON/blob/8afc143e4129670ff8084491f5a77cefa6c8e706/docs/screenshots/Classification(9).png))
 
 The XGBoost output for the most recent scan. Shows the predicted class, severity badge, confidence percentage, and a probability bar chart for all 7 classes. The top class bar is highlighted. A model tag shows whether XGBoost or RandomForest was used.
 
