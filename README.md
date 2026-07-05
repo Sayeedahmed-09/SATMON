@@ -73,14 +73,14 @@ Auto-generated alert log. Every time the classifier returns a warning or critica
 ---
 
 ### Live Simulation
-![Live Simulation]((https://github.com/Sayeedahmed-09/SATMON/blob/20d7ff1965e443aafce05aa57aed171570d22e72/docs/screenshots/Live%20Simulation(6).png))
+![Live Simulation](https://github.com/Sayeedahmed-09/SATMON/blob/20d7ff1965e443aafce05aa57aed171570d22e72/docs/screenshots/Live%20Simulation(6).png)
 
 Starts a continuous simulation loop. Each tick nudges the current telemetry slightly (small random walk) and re-runs XGBoost + SHAP. The live feed shows each prediction as it arrives. Speed is adjustable from 0.5s to 2s per tick. The dashboard telemetry chart and subsystem rings update automatically.
 
 ---
 
 ### Quick Load
-![Quick Load]((https://github.com/Sayeedahmed-09/SATMON/blob/d5e95256d6992dce893138a1b941224a733ab7c7/docs/screenshots/Quick%20Load(7).png))
+![Quick Load](https://github.com/Sayeedahmed-09/SATMON/blob/d5e95256d6992dce893138a1b941224a733ab7c7/docs/screenshots/Quick%20Load(7).png)
 
 Six preset scenarios for fast testing — Normal Operation, Power Anomaly, Thermal Anomaly, Critical Fault, Communication Issue, and a Borderline/Mixed Signal scenario. Each card shows the expected severity and confidence level. "Load Only" fills the form so you can inspect and edit values first. "Load & Scan" runs immediately.
 
@@ -89,7 +89,7 @@ Also includes three randomize modes: High Confidence (values inside nominal rang
 ---
 
 ### Classification Result
-![Classification Result]((https://github.com/Sayeedahmed-09/SATMON/blob/8afc143e4129670ff8084491f5a77cefa6c8e706/docs/screenshots/Classification(9).png))
+![Classification Result](https://github.com/Sayeedahmed-09/SATMON/blob/8afc143e4129670ff8084491f5a77cefa6c8e706/docs/screenshots/Classification(9).png)
 
 The XGBoost output for the most recent scan. Shows the predicted class, severity badge, confidence percentage, and a probability bar chart for all 7 classes. The top class bar is highlighted. A model tag shows whether XGBoost or RandomForest was used.
 
