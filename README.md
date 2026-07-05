@@ -117,7 +117,7 @@ Runs both XGBoost and RandomForest on the exact same telemetry and shows the res
 ---
 
 ### Remaining Useful Life
-![RUL](docs/screenshots/rul.png)
+![RUL](https://github.com/Sayeedahmed-09/SATMON/blob/8aa9db83c386e6bfb1d0dec4db099d65289c3ed5/docs/screenshots/Remaining%20Life(13).png)
 
 Tracks Battery SOC, CPU Temperature, and Bus Voltage over recent scans. Fits a linear regression to each parameter's recent history and projects how many more ticks before it crosses its critical threshold. Shows current value, threshold, trend slope, and a status bar. Requires at least 3 data points — run a few scans or start the simulator.
 
